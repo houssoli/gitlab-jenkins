@@ -1,0 +1,69 @@
+#
+# Simple docker-compose file for Gitlab CE and a Jenkins master/slaves.
+# This is for testing and builds are done on the jenkins master/slaves.
+#
+version: "2"
+services:
+  master:
+    image: lhoussou/jenkins-master:v1.1
+    build:
+      context: "${PWD}/jenkins.master"
+    container_name: jenkins-master
+    ports:
+      - "8443:8443"
+    environment:
+      - JAVA_OPTS=-Xmx2048m
+      - JENKINS_OPTS=--httpPort=8080 --httpsPort=8443 --httpsKeyStore=${httpsKeyStore} --httpsKeyStorePassword=${httpsKeyStorePassword}
+    volumes:
+      - /etc/keystore.jks:/etc/keystore.jks
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_BIN}:/usr/bin/docker
+      # - jenkins-master:/var/jenkins_home
+      - "/opt/automation/jenkins-master:/var/jenkins_home"
+      # - "${PWD}/jenkins.master/filebeat.yml:/etc/filebeat/filebeat.yml:ro"
+      # - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
+      # - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
+      # - "${PWD}/.tmpdir/downloads:/var/jenkins_home/downloads"
+
+  worker:
+    image: lhoussou/jenkins-slave:v1.1
+    build:
+      context: "${PWD}/jenkins.slave"
+    container_name: jenkins-slave
+    environment:
+      JAVA_OPTS: "-Xmx2048m"
+      JENKINS_MASTER: "http://master:8080"
+      JENKINS_NAME: "worker"
+      JENKINS_USER: "jenkins"
+      JENKINS_PASS: "jenkins"
+      JENKINS_RETRY: "10"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ${DOCKER_BIN}:/usr/bin/docker
+      # - jenkins-worker:/var/jenkins_home/worker
+      - "/opt/automation/jenkins-worker:/var/jenkins_home"
+    depends_on:
+      - master
+
+  gitlab:
+    image: 'gitlab/gitlab-ce:10.8.2-ce.0'
+    hostname: 'gitlab.example.com'
+    container_name: gitlab-ce
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['lfs_enabled'] = true
+        gitlab_rails['gitlab_shell_ssh_port'] = 2289
+        # external_url 'http://gitlab.example.com:8929'
+        # Add any other gitlab.rb configuration here, each on its own line
+    ports:
+      - '8929:80'
+      - '9443:443'
+      - '2289:22'
+    volumes:
+      - "/opt/automation/gitlab/config:/etc/gitlab"
+      - "/opt/automation/gitlab/logs:/var/log/gitlab"
+      - "/opt/automation/gitlab/data:/var/opt/gitlab"
+
+# volumes:
+  # jenkins-master:
+  # jenkins-worker:

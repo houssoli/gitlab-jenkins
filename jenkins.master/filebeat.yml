@@ -1,0 +1,43 @@
+filebeat:
+  prospectors:
+    - input_type: log
+      paths:
+        - "/var/jenkins_home/jobs/*/builds/*/log"
+      # configure multiline for lines without a starting date (https://www.elastic.co/guide/en/beats/filebeat/master/_examples_of_multiline_configuration.html#_java_stack_traces)
+      multiline.pattern: '^[0-9]{4}-[0-9]{2}-[0-9]{2}[T ]'
+      multiline.negate: true
+      multiline.match: after
+
+#============================= Filebeat modules ===============================
+filebeat:
+  config:
+    modules:
+      # Glob pattern for configuration loading
+      path: /etc/filebeat/filebeat.yml
+
+      # Set to true to enable config reloading
+      reload.enabled: true
+
+      # Period on which files under path should be checked for changes
+      #reload.period: 10s
+
+#================================ General =====================================
+
+# The name of the shipper that publishes the network data. It can be used to group
+# all the transactions sent by a single shipper in the web interface.
+name: jenkins-master-shipper
+
+# The tags of the shipper are included in their own field with each
+# transaction published.
+#tags: ["service-X", "web-tier"]
+
+# Optional fields that you can specify to add additional information to the
+# output.
+fields:
+  env: prod
+  cluster: devops-48
+#----------------------------- Logstash output --------------------------------
+output:
+  logstash:
+    hosts: ["logstash:5044"]
+    #index: 'filebeat_prod_devops'
