@@ -1,9 +1,6 @@
 #!/usr/bin/env bash
 
 #get needed stuff 1st
-./setup.sh
-
-#get needed stuff 1st
 ./download.sh
 
 #clean anything with same name to get rid of clashes

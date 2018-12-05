@@ -28,7 +28,6 @@ RUN chmod go-w /etc/filebeat/filebeat.yml
 COPY ["entrypoint.sh", "/"]
 RUN chmod +x /entrypoint.sh
 
-ENTRYPOINT ["/bin/bash","-c","./entrypoint.sh"]
-CMD ["/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
-
 USER ${user}
+ENTRYPOINT ["/bin/bash"]
+CMD ["-c","./entrypoint.sh"]

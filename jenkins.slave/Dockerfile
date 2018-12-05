@@ -40,7 +40,7 @@ RUN mkdir -p /var/jenkins_home \
 
 COPY docker-entrypoint.sh /
 
-VOLUME /var/jenkins_home/worker
+VOLUME /var/jenkins_home
 WORKDIR /var/jenkins_home/worker
 
 ENTRYPOINT ["/docker-entrypoint.sh"]

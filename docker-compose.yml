@@ -5,7 +5,7 @@
 version: "2"
 services:
   master:
-    image: lhoussou/jenkins-master:v1.1
+    image: devops/jenkins-master:v1.1
     build:
       context: "${PWD}/jenkins.master"
     container_name: jenkins-master
@@ -24,9 +24,12 @@ services:
       # - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
       # - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
       # - "${PWD}/.tmpdir/downloads:/var/jenkins_home/downloads"
+    networks:
+      - default
+      - stack-docker_stack
 
   worker:
-    image: lhoussou/jenkins-slave:v1.1
+    image: devops/jenkins-slave:v1.1
     build:
       context: "${PWD}/jenkins.slave"
     container_name: jenkins-slave
@@ -42,6 +45,8 @@ services:
       - ${DOCKER_BIN}:/usr/bin/docker
       # - jenkins-worker:/var/jenkins_home/worker
       - "/opt/automation/jenkins-worker:/var/jenkins_home"
+    networks:
+      - default
     depends_on:
       - master
 
@@ -63,7 +68,14 @@ services:
       - "/opt/automation/gitlab/config:/etc/gitlab"
       - "/opt/automation/gitlab/logs:/var/log/gitlab"
       - "/opt/automation/gitlab/data:/var/opt/gitlab"
+    networks:
+      - default
 
 # volumes:
   # jenkins-master:
   # jenkins-worker:
+
+networks:
+  default:
+  stack-docker_stack:
+    external: true
