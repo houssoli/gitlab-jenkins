@@ -3,6 +3,9 @@
 #get needed stuff 1st
 ./download.sh
 
+#update with actual password
+echo "password" > ./jenkins.master/secrets/artifactoryPassword
+
 #clean anything with same name to get rid of clashes
 docker-compose -f docker-compose.yml down
 

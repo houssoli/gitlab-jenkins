@@ -10,7 +10,6 @@ if [ ! -d .tmpdir/downloads ]; then
 fi
 pushd ${PWD}
 cd .tmpdir/downloads
-#   curl -o jdk-8u131-linux-x64.tar.gz http://ftp.osuosl.org/pub/funtoo/distfiles/oracle-java/jdk-8u131-linux-x64.tar.gz
 curl -o apache-maven-3.6.0-bin.tar.gz https://www-us.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz
 curl -o apache-maven-3.6.0-bin.tar.gz.sha512 https://www.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz.sha512
 #curl -o apache-maven-3.6.0-bin.tar.gz.asc https://www.apache.org/dist/maven/maven-3/3.6.0/binaries/apache-maven-3.6.0-bin.tar.gz.asc

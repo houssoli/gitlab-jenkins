@@ -2,3 +2,4 @@
 .secret
 .env
 .tmpdir
+jenkins.master/secrets

@@ -2,7 +2,7 @@
 # Simple docker-compose file for Gitlab CE and a Jenkins master/slaves.
 # This is for testing and builds are done on the jenkins master/slaves.
 #
-version: "2"
+version: "3.6"
 services:
   master:
     image: devops/jenkins-master:v1.1
@@ -20,13 +20,16 @@ services:
       - ${DOCKER_BIN}:/usr/bin/docker
       # - jenkins-master:/var/jenkins_home
       - "/opt/automation/jenkins-master:/var/jenkins_home"
-      # - "${PWD}/jenkins.master/filebeat.yml:/etc/filebeat/filebeat.yml:ro"
+      - "${PWD}/.tmpdir/downloads:/var/jenkins_home/downloads"
       # - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
       # - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
-      # - "${PWD}/.tmpdir/downloads:/var/jenkins_home/downloads"
+      # - "${PWD}/jenkins.master/filebeat.yml:/etc/filebeat/filebeat.yml:ro"
+
     networks:
       - default
       - stack-docker_stack
+    secrets:
+     - artifactoryPassword
 
   worker:
     image: devops/jenkins-slave:v1.1
@@ -79,3 +82,7 @@ networks:
   default:
   stack-docker_stack:
     external: true
+
+secrets:
+  artifactoryPassword:
+    file: ${PWD}/jenkins.master/secrets/artifactoryPassword
