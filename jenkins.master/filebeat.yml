@@ -13,14 +13,20 @@
 # https://www.elastic.co/guide/en/beats/filebeat/current/configuring-howto-filebeat.html
 # https://www.elastic.co/guide/en/beats/filebeat/current/configuration-path.html
 # https://www.elastic.co/guide/en/beats/filebeat/current/directory-layout.html
+#
+# https://www.elastic.co/guide/en/beats/filebeat/current/exported-fields-beat.html
+# https://www.elastic.co/guide/en/beats/filebeat/current/exported-fields.html
+#
 # https://www.elastic.co/guide/en/beats/filebeat/current/configuring-ssl-logstash.html
+# https://www.elastic.co/blog/logstash-metadata
+# https://www.elastic.co/guide/en/logstash/current/event-dependent-configuration.html#metadata
 #
 #=========================== Filebeat inputs ===============================
 filebeat.inputs:
 - type: log
 
   # Change to true to enable this input configuration.
-  enabled: false
+  enabled: true
 
   # Paths that should be crawled and fetched. Glob based paths.
   paths:
@@ -87,7 +93,7 @@ fields:
 output.logstash:
   # The Logstash hosts
   hosts: ["logstash:5044"]
-  index: 'filebeat'
+  #index: 'filebeat_prod_devops'
 
   # Optional SSL. By default is off.
   # List of root certificates for HTTPS server verifications

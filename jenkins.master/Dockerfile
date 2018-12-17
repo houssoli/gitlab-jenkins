@@ -12,7 +12,7 @@ RUN groupadd -g 999 docker \
 
 RUN curl -sL https://deb.nodesource.com/setup_8.x | bash - \
  && apt-get update \
- && apt-get install -y --no-install-recommends graphviz nodejs \
+ && apt-get install -y --no-install-recommends graphviz nodejs vim nano less tree \
  && rm -rf /var/lib/apt/lists/*
 
 RUN curl -sL https://artifacts.elastic.co/GPG-KEY-elasticsearch | apt-key add - \
