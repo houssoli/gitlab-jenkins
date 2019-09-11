@@ -80,3 +80,6 @@ While Gitlab volumes:
     /opt/automation/gitlab/config:/etc/gitlab
     /opt/automation/gitlab/logs:/var/log/gitlab
     /opt/automation/gitlab/data:/var/opt/gitlab
+
+# Resources
+* [Official Jenkins Docker image](https://hub.docker.com/r/jenkins/jenkins). Read [documentation](https://github.com/jenkinsci/docker/blob/master/README.md) for usage.
