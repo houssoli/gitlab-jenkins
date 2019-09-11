@@ -21,8 +21,8 @@ services:
       # - jenkins-master:/var/jenkins_home
       - "/opt/automation/jenkins-master:/var/jenkins_home"
       - "${PWD}/.tmpdir/downloads:/var/jenkins_home/downloads"
-      # - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
-      # - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
+      - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
+      - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
       # - "${PWD}/jenkins.master/filebeat.yml:/etc/filebeat/filebeat.yml:ro"
 
     networks:

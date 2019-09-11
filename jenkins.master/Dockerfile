@@ -31,3 +31,4 @@ RUN chmod +x /entrypoint.sh
 USER ${user}
 ENTRYPOINT ["/bin/bash"]
 CMD ["-c","./entrypoint.sh"]
+#CMD ["-c" "/sbin/tini", "--", "/usr/local/bin/jenkins.sh"]
