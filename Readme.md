@@ -81,5 +81,16 @@ While Gitlab volumes:
     /opt/automation/gitlab/logs:/var/log/gitlab
     /opt/automation/gitlab/data:/var/opt/gitlab
 
+Troubleshooting Permission problems
+
+    $ docker-compose exec gitlab update-permissions
+
+    $ getfacl /opt/automation/gitlab
+    $ sudo setfacl -R -m default:group:docker:rwx /opt/automation/gitlab
+
+    $ docker-compose exec gitlab /bin/bash
+    $ docker-compose restart gitlab
+
 # Resources
 * [Official Jenkins Docker image](https://hub.docker.com/r/jenkins/jenkins). Read [documentation](https://github.com/jenkinsci/docker/blob/master/README.md) for usage.
+* [GitLab Docker images](https://docs.gitlab.com/omnibus/docker/). Read [Install GitLab using docker-compose](https://docs.gitlab.com/omnibus/docker/#install-gitlab-using-docker-compose) for usage.

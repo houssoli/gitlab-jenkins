@@ -61,10 +61,10 @@ services:
       GITLAB_OMNIBUS_CONFIG: |
         gitlab_rails['lfs_enabled'] = true
         gitlab_rails['gitlab_shell_ssh_port'] = 2289
-        # external_url 'http://gitlab.example.com:8929'
+        external_url 'http://gitlab.example.com:8929'
         # Add any other gitlab.rb configuration here, each on its own line
     ports:
-      - '8929:80'
+      - '8929:8929'
       - '9443:443'
       - '2289:22'
     volumes:
