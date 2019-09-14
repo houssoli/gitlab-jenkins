@@ -37,6 +37,15 @@ Setup Jenkins at [https://localhost:8443]()
         JENKINS_USER: "jenkins"
         JENKINS_PASS: "jenkins"
 
+For Jenkins Swarm plugin authentication, make sure the user `jenkins` has been assigned a role say `SwarmAgent` granted at least with the permissions : 
+
+    * Overall/Read
+    * Agent/Configure
+    * Agent/Connect
+    * Agent/Create
+    * Agent/Delete
+    * Agent/Disconnect
+
 * To add more Jenkins workers:
 
         $ docker-compose scale worker=3
@@ -81,7 +90,7 @@ While Gitlab volumes:
     /opt/automation/gitlab/logs:/var/log/gitlab
     /opt/automation/gitlab/data:/var/opt/gitlab
 
-Troubleshooting Permission problems
+### Troubleshooting Permission problems
 
     $ docker-compose exec gitlab update-permissions
 
@@ -90,6 +99,13 @@ Troubleshooting Permission problems
 
     $ docker-compose exec gitlab /bin/bash
     $ docker-compose restart gitlab
+
+### Accessing the host from inside a Docker container
+
+To Get the IP of the host computer from within Docker container
+
+    $ /sbin/ip route | awk '/default/ { print $3 }'
+
 
 # Resources
 * [Official Jenkins Docker image](https://hub.docker.com/r/jenkins/jenkins). Read [documentation](https://github.com/jenkinsci/docker/blob/master/README.md) for usage.

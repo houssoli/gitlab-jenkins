@@ -1,8 +1,8 @@
-FROM java:openjdk-8
+FROM openjdk:8
 
-ENV GOSU_VERSION=1.10 \
-    SWARM_VERSION=3.12 \
-    MD5=49c49893fd188b2f34afd9f7a2332f6c \
+ENV GOSU_VERSION=1.11 \
+    SWARM_VERSION=3.17 \
+    MD5=4127f1f832d227d3e6a3bfd419edc0de \
     PHANTOMJS_VERSION=phantomjs-2.1.1-linux-x86_64 \
     MD5PHANTOMJS=1c947d57fce2f21ce0b43fe2ed7cd361  \
     CASPERJS_VERSION=1.1.4-2
@@ -14,24 +14,36 @@ RUN apt-get update \
  && wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture)" \
  && wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/$GOSU_VERSION/gosu-$(dpkg --print-architecture).asc" \
  && export GNUPGHOME="$(mktemp -d)" \
- && gpg --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+ && GPG_KEYS=B42F6819007F00F88E364FD4036A9C25BF357DD4 \
+ && gpg --keyserver hkp://:p80.pool.sks-keyservers.net:80 --recv-keys "$GPG_KEYS" \
+  || gpg --keyserver ha.pool.sks-keyservers.net --recv-keys "$GPG_KEYS" \
+  || gpg --keyserver pgp.mit.edu --recv-keys "$GPG_KEYS" \
+  || gpg --keyserver keyserver.pgp.com --recv-keys "$GPG_KEYS" \
  && gpg --batch --verify /usr/local/bin/gosu.asc /usr/local/bin/gosu \
  && rm -rf "$GNUPGHOME" /usr/local/bin/gosu.asc \
  && chmod +x /usr/local/bin/gosu \
  && gosu nobody true
 
+# Python virtualenv
+RUN curl "https://bootstrap.pypa.io/get-pip.py" -o "/tmp/get-pip.py" \
+ && python /tmp/get-pip.py \
+ && pip install virtualenv \
+ && rm /tmp/get-pip.py
+
+# PhantomJS
 RUN wget --no-check-certificate https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOMJS_VERSION.tar.bz2 \
  && echo "$MD5PHANTOMJS  ${PHANTOMJS_VERSION}.tar.bz2" | md5sum -c - \
  && tar xvf ${PHANTOMJS_VERSION}.tar.bz2 \
  && mv $PHANTOMJS_VERSION/bin/phantomjs /usr/local/bin/ \
  && rm -rf phantom*
 
+# CasperJS
 RUN git clone  -b ${CASPERJS_VERSION}  git://github.com/casperjs/casperjs.git \
  && mv casperjs /opt/ \
  && ln -sf /opt/casperjs/bin/casperjs /usr/local/bin/casperjs
 
 # grab swarm-client.jar
-RUN mkdir -p /var/jenkins_home \
+RUN mkdir -p /var/jenkins_home/worker \
  && useradd -d /var/jenkins_home/worker -u 1000 -m -s /bin/bash jenkins \
  && groupadd -g 999 docker \
  && usermod -aG 999 jenkins \

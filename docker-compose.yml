@@ -24,10 +24,11 @@ services:
       - "${PWD}/.tmpdir/jobs:/var/jenkins_home/jobs/"
       - "${PWD}/.tmpdir/m2deps:/var/jenkins_home/.m2/repository/"
       # - "${PWD}/jenkins.master/filebeat.yml:/etc/filebeat/filebeat.yml:ro"
-
     networks:
-      - default
-      - stack-docker_stack
+      default:
+        aliases:
+          - "jenkins.example.com"
+      stack-docker_stack:
     secrets:
      - artifactoryPassword
 
@@ -49,12 +50,14 @@ services:
       # - jenkins-worker:/var/jenkins_home/worker
       - "/opt/automation/jenkins-worker:/var/jenkins_home"
     networks:
-      - default
+      default:
+        aliases:
+          - "jenkins-slave.example.com"
     depends_on:
       - master
 
   gitlab:
-    image: 'gitlab/gitlab-ce:12.0.9-ce.0'
+    image: 'gitlab/gitlab-ce:12.2.5-ce.0'
     hostname: 'gitlab.example.com'
     container_name: gitlab-ce
     environment:
@@ -72,7 +75,9 @@ services:
       - "/opt/automation/gitlab/logs:/var/log/gitlab"
       - "/opt/automation/gitlab/data:/var/opt/gitlab"
     networks:
-      - default
+      default:
+        aliases:
+          - "gitlab.example.com"
 
 # volumes:
   # jenkins-master:
